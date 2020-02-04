@@ -2,7 +2,7 @@
 <nav class="navbar" role="navigation" aria-label="main navigation">
   <div class="navbar-brand">
     <a class="navbar-item">
-      <img src="/src/assets/logo.jpg" width="112" height="28">
+      체크 TEST 
     </a>
 
     <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
@@ -14,19 +14,9 @@
 
   <div id="navbarBasicExample" class="navbar-menu">
     <div class="navbar-start">
-      <a class="navbar-item">
-        Home
-      </a>
-
-      <a class="navbar-item">
-        Documentation
-      </a>
-
-      <div class="navbar-item has-dropdown is-hoverable">
-        <a class="navbar-link">
-          More
-        </a>
-      </div>
+      <router-link  class="navbar-item" to="/">Home</router-link> 
+      <router-link  class="navbar-item" to="/about">About</router-link>
+    
     </div>
 
 

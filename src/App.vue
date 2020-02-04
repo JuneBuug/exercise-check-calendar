@@ -1,9 +1,6 @@
 <template>
   <div id="app">
    <Nav></Nav>
-    
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
   
     <button @click="getAll()">클릭</button>
     <li v-for="todo in todos">{{todo.data.title}} <span>{{todo.data.completed}}</span> </li>
