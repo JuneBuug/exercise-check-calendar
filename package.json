@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "start": "npm-run-all --parallel serve start:server",
+    "build-parallel": "npm-run-all --parallel build build:functions",
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "start:server": "netlify-lambda serve functions",
