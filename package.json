@@ -3,10 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "start": "npm-run-all --parallel serve start:server",
+    "serve": "npm-run-all --parallel serve:app serve:server",
     "build": "npm-run-all --parallel build:**",
-    "serve": "vue-cli-service serve",
-    "start:server": "netlify-lambda serve functions",
+    "serve:app": "vue-cli-service serve",
+    "serve:server": "netlify-lambda serve functions",
     "build:functions": "netlify-lambda build functions",
     "build:app": "vue-cli-service build",
     "prebuild": "echo 'setup faunaDB' && npm run bootstrap",
@@ -14,6 +14,7 @@
   },
   "dependencies": {
     "axios": "^0.19.2",
+    "buefy": "^0.8.10",
     "core-js": "^3.4.4",
     "encoding": "^0.1.12",
     "faunadb": "^2.11.1",

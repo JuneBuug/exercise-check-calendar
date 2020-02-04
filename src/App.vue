@@ -1,9 +1,10 @@
 <template>
   <div id="app">
-    <div id="nav">
+   <Nav></Nav>
+    
       <router-link to="/">Home</router-link> |
       <router-link to="/about">About</router-link>
-    </div>
+  
     <button @click="getAll()">클릭</button>
     <li v-for="todo in todos">{{todo.data.title}} <span>{{todo.data.completed}}</span> </li>
     <router-view/>
@@ -12,9 +13,13 @@
 
 
 <script>
+import Nav from './components/Nav.vue'
 
 export default {
 
+  components: {
+    Nav
+  },
   data() {
     return {
       todos: [],
@@ -50,15 +55,6 @@ export default {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #2c3e50;
-}
-
-#nav {
-  padding: 30px;
-}
-
-#nav a {
-  font-weight: bold;
   color: #2c3e50;
 }
 
