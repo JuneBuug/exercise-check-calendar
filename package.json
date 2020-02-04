@@ -4,11 +4,12 @@
   "private": true,
   "scripts": {
     "start": "npm-run-all --parallel serve start:server",
-    "build-parallel": "npm-run-all --parallel build build:functions",
+    "build": "npm-run-all --parallel build:**",
     "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
     "start:server": "netlify-lambda serve functions",
     "build:functions": "netlify-lambda build functions",
+    "build:app": "vue-cli-service build",
+    "prebuild": "echo 'setup faunaDB' && npm run bootstrap",
     "bootstrap": "node ./scripts/bootstrap-fauna-database.js"
   },
   "dependencies": {
