@@ -1,6 +1,6 @@
 <template>
   <div class="about">
-
+     {{ $route.params.nickname }}
    <div class="columns is-multiline" stlye="margin-left: 2%; margin-right:2%;" v-for="i in 5">
       <div class="column" v-for="j in 7">
           <div class="box light-shadow">
@@ -38,7 +38,6 @@
           </section>
       </div>
     </div>
-  </section>
   </div>
 </template>
 
@@ -53,9 +52,12 @@ export default {
       days: 0,
       today: new Date().getDate(),
       checked: false,
-      showModalFlag: false
+      showModalFlag: false,
+      kcal: 0,
+      elapsedTimeInSec: 0,
     }
   },
+  props: {'nickname': String},
   created() {
     console.log("이번달의 days: " + this.getDaysInThisMonth())
     this.days = this.getDaysInThisMonth()
@@ -71,12 +73,20 @@ export default {
     },
     turnChecked() {
       this.checked = !this.checked
+      this.createRecord()
     },
     showModal() {
       this.showModalFlag = true;
     },
     hideModal() {
       this.showModalFlag = false;
+    },
+    createRecord() {
+
+       this.$http.post('/.netlify/functions/records-create', {'name': this.nickname, completed: this.checked, date: new Date(), cal: this.kcal, elapsedTimeInSec: this.elapsedTimeInSec  })
+    .then(res => {
+        console.log(res)
+      })
     }
   }
 }

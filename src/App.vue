@@ -2,11 +2,6 @@
   <div id="app">
    <Nav></Nav>
   
-    <input type="email" v-model="email"></input>
-    <input type="password" v-model="password"></input>
-
-    <button class="button" @click="signup()">가입</button>
-    <button class="button" @click="login()">로그인</button>
     <!-- <button @click="getAll()">클릭</button>
     <li v-for="todo in todos">{{todo.data.title}} <span>{{todo.data.completed}}</span> </li> -->
     <router-view/>

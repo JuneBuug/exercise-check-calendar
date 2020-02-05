@@ -32,13 +32,13 @@ function createFaunaDB(key) {
     })
 
     /* Based on your requirements, change the schema here */
-    return client.query(q.Create(q.Ref('classes'), { name: 'users' }))
+    return client.query(q.Create(q.Ref('classes'), { name: 'records' }))
         .then(() => {
             return client.query(
                 q.Create(q.Ref('indexes'), {
-                    name: 'users_by_email',
-                    source: q.Ref('classes/users'),
-                    terms: [{field: ["data", "email"]}],
+                    name: 'records_by_name',
+                    source: q.Ref('classes/records'),
+                    terms: [{field: ["data", "name"]}],
                     unique: true
                 }))
         }).catch((e) => {

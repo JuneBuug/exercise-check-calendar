@@ -15,9 +15,10 @@ const routes = [
     component: Home
   },
   {
-    path: '/cal',
+    path: '/:nickname',
     name: 'calendar',
-    component: () => import(/* webpackChunkName: "about" */ '../views/Cal.vue')
+    component: () => import(/* webpackChunkName: "about" */ '../views/Cal.vue'),
+    props: true
   }
 ]
 

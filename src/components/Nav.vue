@@ -21,7 +21,8 @@
   <div id="navbarBasicExample" class="navbar-menu" :class="{'is-active': activeFlag}">
     <div class="navbar-start">
       <router-link  class="navbar-item" to="/">Home</router-link> 
-      <router-link  class="navbar-item" to="/cal">Calendar</router-link>
+
+      <router-link  class="navbar-item" v-for="member in members" :to="member">{{member}}✨</router-link>
     
     </div>
 
@@ -38,6 +39,7 @@ export default {
     name: 'Nav',
     data() {
       return {
+        members: ['juneyr', 'hypetrain','talonF'],
         activeFlag: false, 
       }
     },
