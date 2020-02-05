@@ -30,13 +30,11 @@
 
 
 <div class="modal" :class="{'is-active': showModalFlag}">
-      <div class="modal-background"></div>
+      <div class="modal-background" @click="hideModal()"></div>
       <div class="modal-card">
         <section class="modal-card-body">
-          <p>잘했어! 반짝이는 땀이 정말 아름다워!</p>
-           <button @click="hideModal()" class="button is-white is-outline">
-            ✅
-            </button>       
+          <p role="button" @click="hideModal()">잘했어! 반짝이는 땀이 정말 아름다워!</p>
+              
           </section>
       </div>
     </div>
