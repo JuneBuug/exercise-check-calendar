@@ -35,7 +35,7 @@
         <section class="modal-card-body">
           <p>잘했어! 반짝이는 땀이 정말 아름다워!</p>
            <button @click="hideModal()" class="button is-white is-outline">
-           ✅
+            ✅
             </button>       
           </section>
       </div>
@@ -48,7 +48,7 @@
 <script>
 
 export default {
-
+  name: 'Cal',
   data() {
     return {
       columns: 35,
