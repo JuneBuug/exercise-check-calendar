@@ -43,6 +43,7 @@
 
 
 <script>
+import moment from 'moment-timezone'
 
 export default {
   name: 'Cal',
@@ -83,7 +84,7 @@ export default {
     },
     createRecord() {
 
-       this.$http.post('/.netlify/functions/records-create', {'name': this.nickname, completed: this.checked, date: new Date(), cal: this.kcal, elapsedTimeInSec: this.elapsedTimeInSec  })
+       this.$http.post('/.netlify/functions/records-create', {'name': this.nickname, completed: this.checked, date: moment(new Date()).format("YYYY-MM-DD"), cal: this.kcal, elapsedTimeInSec: this.elapsedTimeInSec  })
     .then(res => {
         console.log(res)
       })

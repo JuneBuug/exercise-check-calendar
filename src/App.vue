@@ -11,6 +11,7 @@
 
 <script>
 import Nav from './components/Nav.vue'
+import moment from 'moment-timezone'
 
 export default {
 
@@ -25,6 +26,7 @@ export default {
     }
   },
   created() {
+    console.log(moment(new Date()))
     console.log("만들어졌따")
     this.getAll()
   },

@@ -3,9 +3,14 @@ import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
 import Buefy from 'buefy'
 import 'buefy/dist/buefy.css'
+import VueMomentJs from 'vue-momentjs'
+import moment from 'moment-timezone'
+
+moment.tz.setDefault('Asia/Seoul')
 
 Vue.use(Buefy)
 Vue.use(VueRouter)
+Vue.use(VueMomentJs)
 
 
 const routes = [
