@@ -2,8 +2,8 @@
   <div id="app">
    <Nav></Nav>
   
-    <button @click="getAll()">클릭</button>
-    <li v-for="todo in todos">{{todo.data.title}} <span>{{todo.data.completed}}</span> </li>
+    <!--<button @click="getAll()">클릭</button>
+    <li v-for="todo in todos">{{todo.data.title}} <span>{{todo.data.completed}}</span> </li> -->
     <router-view/>
   </div>
 </template>
