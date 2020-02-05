@@ -2,7 +2,12 @@
   <div id="app">
    <Nav></Nav>
   
-    <!--<button @click="getAll()">클릭</button>
+    <input type="email" v-model="email"></input>
+    <input type="password" v-model="password"></input>
+
+    <button class="button" @click="signup()">가입</button>
+    <button class="button" @click="login()">로그인</button>
+    <!-- <button @click="getAll()">클릭</button>
     <li v-for="todo in todos">{{todo.data.title}} <span>{{todo.data.completed}}</span> </li> -->
     <router-view/>
   </div>
@@ -20,6 +25,8 @@ export default {
   data() {
     return {
       todos: [],
+      email: '',
+      password: '',
     }
   },
   created() {
@@ -40,6 +47,18 @@ export default {
         this.todos = res.data
         }
       )
+    },
+    signup() {
+      this.$http.post('/.netlify/functions/users-signup', {'email': this.email, 'password': this.password})
+      .then(res => {
+         console.log(res)
+      })
+    },
+    login() {
+      this.$http.post('/.netlify/functions/users-login', {'email': this.email, 'password': this.password})
+      .then(res => {
+         console.log(res)
+      })
     }
   }
 }
