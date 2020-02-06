@@ -30,22 +30,18 @@
                   <span>DAY {{(i-1)* 7 + j}}</span>
                   <br />
 
-                  <Dot role="button" color="#6783FC" @click="showModal()"></Dot>
+                  
 
                   <button
-                    v-if="(i-1)* 7 + j == today"
-                    class="button is-info is-outlined is-rounded full-width has-text-weight-semibold"
+                    v-if="(i-1)* 7 + j == today || (i-1) * 7 + j + 1 == today "
+                    class="button is-success is-outlined is-rounded full-width has-text-weight-semibold"
                     @click="turnChecked()"
                   >
                     <span v-if="!checked">인증🔥</span>
                     <span v-if="checked">인증완료</span>
                   </button>
                 
-                  <span
-                    v-else-if="(i-1)* 7 + j > today"
-                    class="is-success full-width has-text-weight-semibold"
-                    
-                  > be prepared 🦁</span>
+                  <Dot  v-else-if="(i-1)* 7 + j > today" color="#6783FC" @click="showModal()"></Dot>
                   <Dot v-else color=#86E3CE></Dot>
                 </p>
               </div>
