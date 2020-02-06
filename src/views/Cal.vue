@@ -1,41 +1,66 @@
 <template>
   <div class="about">
-     {{ $route.params.nickname }}
-   <div class="columns is-multiline" stlye="margin-left: 2%; margin-right:2%;" v-for="i in 5">
+    {{ $route.params.nickname }}
+    <!-- 요일 컴포넌트 시작 -->
+    <div class="columns is-multiline" stlye="margin-left: 2%; margin-right:2%;">
       <div class="column" v-for="j in 7">
-          <div class="box light-shadow">
-            <article class="media">
-              <div class="media-content">
-                <div class="content">
-                  <p class="has-text-centered">
-                    <strong>DAY {{(i-1)* 7 + j}} </strong>
-                    <br>
-                    <button v-if="(i-1)* 7 + j == today" 
-                    class="button is-info is-outlined is-rounded full-width has-text-weight-semibold"
-                    @click="turnChecked()">
-                      <span v-if="!checked">인증🔥</span>
-                      <span v-if="checked">인증완료</span>
-                    </button>
-                    <button v-else-if="(i-1)* 7 + j > today" 
-                    class="button is-success is-light is-outlined is-rounded full-width has-text-weight-semibold"
-                    @click="showModal()">👀</button>
-                    <button v-else class="button is-light is-outlined is-rounded full-width">만료</button>
-                  </p>
-                </div>
+        <div class="box no-shadow">
+          <article class="media">
+            <div class="media-content">
+              <div class="content">
+                <p class="has-text-centered">
+                  <strong>{{ weekdaysShort[j-1] }}</strong>
+                  <br />
+                </p>
               </div>
-            </article>
+            </div>
+          </article>
         </div>
-      </div>    
-  </div>
+      </div>
+    </div>
+    <!-- 요일 컴포넌트 종료 -->
 
+    <div class="columns is-multiline" stlye="margin-left: 2%; margin-right:2%;" v-for="i in 5">
+      <div class="column" v-for="j in 7">
+        <div class="box light-shadow">
+          <article class="media">
+            <div class="media-content">
+              <div class="content">
+                <p class="has-text-centered">
+                  <span>DAY {{(i-1)* 7 + j}}</span>
+                  <br />
 
-<div class="modal" :class="{'is-active': showModalFlag}">
+                  <Dot role="button" color="#6783FC" @click="showModal()"></Dot>
+
+                  <button
+                    v-if="(i-1)* 7 + j == today"
+                    class="button is-info is-outlined is-rounded full-width has-text-weight-semibold"
+                    @click="turnChecked()"
+                  >
+                    <span v-if="!checked">인증🔥</span>
+                    <span v-if="checked">인증완료</span>
+                  </button>
+                
+                  <span
+                    v-else-if="(i-1)* 7 + j > today"
+                    class="is-success full-width has-text-weight-semibold"
+                    
+                  > be prepared 🦁</span>
+                  <Dot v-else color=#86E3CE></Dot>
+                </p>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal" :class="{'is-active': showModalFlag}">
       <div class="modal-background" @click="hideModal()"></div>
       <div class="modal-card">
         <section class="modal-card-body">
           <p role="button" @click="hideModal()">잘했어! 반짝이는 땀이 정말 아름다워!</p>
-              
-          </section>
+        </section>
       </div>
     </div>
   </div>
@@ -43,10 +68,12 @@
 
 
 <script>
-import moment from 'moment-timezone'
+import moment from "moment-timezone";
+import Dot from "../components/Dot";
 
 export default {
-  name: 'Cal',
+  name: "Cal",
+  components: { Dot },
   data() {
     return {
       columns: 35,
@@ -56,25 +83,42 @@ export default {
       showModalFlag: false,
       kcal: 0,
       elapsedTimeInSec: 0,
-    }
+      weekdaysShort: ["일", "월", "화", "수", "목", "금", "토"],
+      colorPalette: ["#6783FC", "#86E3CE", "#D0E6A5","#FFDD94", "#FA897B", "#CCABD8" ]
+    };
   },
-  props: {'nickname': String},
+  props: { nickname: String },
   created() {
-    console.log("이번달의 days: " + this.getDaysInThisMonth())
-    this.days = this.getDaysInThisMonth()
-  },
+    console.log("이번달의 days: " + this.getDaysInThisMonth());
+    this.days = this.getDaysInThisMonth();
+    moment.updateLocale("Asia/Seoul", {
+      weekdays: [
+        "일요일",
+        "월요일",
+        "화요일",
+        "수요일",
+        "목요일",
+        "금요일",
+        "토요일"
+      ],
+      weekdaysShort: this.weekdaysShort
+    });
 
+    var m = moment();
+
+    console.log(m.format("YYYY-MM-DD HH:mm:ss ddd"));
+  },
   methods: {
-    getDaysInThisMonth(){
+    getDaysInThisMonth() {
       var today = new Date();
       var year = today.getYear();
       var month = today.getMonth();
 
-      return new Date(year, month, 0).getDate()
+      return new Date(year, month, 0).getDate();
     },
     turnChecked() {
-      this.checked = !this.checked
-      this.createRecord()
+      this.checked = !this.checked;
+      this.createRecord();
     },
     showModal() {
       this.showModalFlag = true;
@@ -83,14 +127,20 @@ export default {
       this.showModalFlag = false;
     },
     createRecord() {
-
-       this.$http.post('/.netlify/functions/records-create', {'name': this.nickname, completed: this.checked, date: moment(new Date()).format("YYYY-MM-DD"), cal: this.kcal, elapsedTimeInSec: this.elapsedTimeInSec  })
-    .then(res => {
-        console.log(res)
-      })
+      this.$http
+        .post("/.netlify/functions/records-create", {
+          name: this.nickname,
+          completed: this.checked,
+          date: moment(new Date()).format("YYYY-MM-DD"),
+          cal: this.kcal,
+          elapsedTimeInSec: this.elapsedTimeInSec
+        })
+        .then(res => {
+          console.log(res);
+        });
     }
   }
-}
+};
 </script>
 
 
@@ -100,7 +150,9 @@ export default {
 }
 
 .light-shadow {
-   box-shadow: 0 5px 14px rgba(10, 10, 10, 0.05), 5px 5px 5px 5px rgba(216, 215, 215, 0.05);
-   -webkit-box-shadow:0 5px 14px rgba(10, 10, 10, 0.05), 5px 5px 5px 5px rgba(216, 215, 215, 0.05)
+  box-shadow: 0 5px 14px rgba(10, 10, 10, 0.05),
+    5px 5px 5px 5px rgba(216, 215, 215, 0.05);
+  -webkit-box-shadow: 0 5px 14px rgba(10, 10, 10, 0.05),
+    5px 5px 5px 5px rgba(216, 215, 215, 0.05);
 }
 </style>

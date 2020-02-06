@@ -1,9 +1,7 @@
 <template>
   <div id="app">
    <Nav></Nav>
-  
-    <!-- <button @click="getAll()">클릭</button>
-    <li v-for="todo in todos">{{todo.data.title}} <span>{{todo.data.completed}}</span> </li> -->
+   
     <router-view/>
   </div>
 </template>
@@ -21,14 +19,10 @@ export default {
   data() {
     return {
       todos: [],
-      email: '',
-      password: '',
     }
   },
   created() {
-    console.log(moment(new Date()))
-    console.log("만들어졌따")
-    this.getAll()
+    console.log("Created App")
   },
   methods: {
     create() {
@@ -45,18 +39,7 @@ export default {
         }
       )
     },
-    signup() {
-      this.$http.post('/.netlify/functions/users-signup', {'email': this.email, 'password': this.password})
-      .then(res => {
-         console.log(res)
-      })
-    },
-    login() {
-      this.$http.post('/.netlify/functions/users-login', {'email': this.email, 'password': this.password})
-      .then(res => {
-         console.log(res)
-      })
-    }
+    
   }
 }
 
