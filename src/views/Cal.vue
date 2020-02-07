@@ -1,9 +1,24 @@
 <template>
   <div class="about">
-    {{ $route.params.nickname }}
+
+
+  <section class="hero is-primary" style="margin-bottom:4%">
+  <div class="hero-body">
+    <div class="container">
+      <h1 class="title">
+      {{ $route.params.nickname }}
+      </h1>
+      <h2 class="subtitle">
+        서두르지말고 천천히 일어서!
+      </h2>
+    </div>
+  </div>
+</section>
+
+   
     <!-- 요일 컴포넌트 시작 -->
 
-    <input type=number v-model="kcal"></input>
+    <input type=number  class="input" v-model="kcal"></input>
 
                   <button
                     class="button is-success is-outlined is-rounded full-width has-text-weight-semibold"
@@ -18,7 +33,7 @@
             <div class="media-content">
               <div class="content">
                 <p class="has-text-centered">
-                  <strong>{{ weekdaysShort[j-1] }}</strong>
+                  <strong>{{ weekdays[j-1] }}</strong>
                   <br />
                 </p>
               </div>
@@ -36,14 +51,16 @@
             <div class="media-content">
               <div class="content">
                 <p class="has-text-centered">
-                  <span>DAY {{(i-1)* 7 + j}}</span>
+                  <span class="has-text-weight-bold">DAY {{(i-1)* 7 + j}} </span>
+                  <br/>
+                  <span class="has-text-weight-light"> {{dateArray[(i-1)* 7 + j - 1 ]}}</span>
                   <br />
 
-              
-                  <Dot v-if="record.data.numberOfDots" v-for="num in numberOfDots"></Dot>
+<!--               
+                  <Dot v-if="!!record.data.numberOfDots" v-for="num in numberOfDots"></Dot> -->
 
                   <button
-                    v-if="(i-1)* 7 + j == today"
+                    v-if="dateArray[(i-1)* 7 + j - 1 ] == today"
                     class="button is-success is-outlined is-rounded full-width has-text-weight-semibold"
                     @click="turnChecked()"
                   >
@@ -52,7 +69,7 @@
                     <span v-if="checked">추가인증</span>
                   </button>
                 
-                  <Dot v-else-if="(i-1)* 7 + j > today" color="#6783FC" @click="showModal()"></Dot>
+                  <Dot v-else-if="dateArray[(i-1)* 7 + j - 1 ] > today" color="#6783FC" @click="showModal()"></Dot>
                   <Dot v-else color=#86E3CE></Dot>
                 </p>
               </div>
@@ -70,7 +87,18 @@
         </section>
       </div>
     </div>
+
+      <div class="modal" :class="{'is-active': showInputModalFlag}">
+      <div class="modal-background" @click="hideModal()"></div>
+      <div class="modal-card">
+        <section class="modal-card-body">
+          <p role="button" @click="hideModal()">잘했어! 반짝이는 땀이 정말 아름다워!</p>
+        </section>
+      </div>
+    </div>
+
   </div>
+
 </template>
 
 
@@ -84,21 +112,23 @@ export default {
   data() {
     return {
       columns: 35,
-      days: 0,
-      today: new Date().getDate(),
+      today: moment().format("MM/DD"),
       checked: false,
       showModalFlag: false,
+      showInputModalFlag: false,
       kcal: 0,
+      startDate: {},
+      endDate: {},
+      dateArray: [],
       elapsedTimeInSec: 0,
       weekdaysShort: ["일", "월", "화", "수", "목", "금", "토"],
+      weekdays: ["월", "화", "수", "목", "금", "토", "일"],
       colorPalette: ["#6783FC", "#86E3CE", "#D0E6A5","#FFDD94", "#FA897B", "#CCABD8" ],
       record: {}
     };
   },
   props: { nickname: String },
   created() {
-    console.log("이번달의 days: " + this.getDaysInThisMonth());
-    this.days = this.getDaysInThisMonth();
     moment.updateLocale("Asia/Seoul", {
       weekdays: [
         "일요일",
@@ -114,17 +144,20 @@ export default {
 
     var m = moment();
 
-    console.log(m.format("YYYY-MM-DD HH:mm:ss ddd"));
-
-    this.getRecordByName()
+    this.startDate = moment("2020-01-27")
+    this.endDate = moment("2020-01-27").add(34, 'days')
+    this.getDateRange()
+    
+    // this.getRecordByName()
   },
   methods: {
-    getDaysInThisMonth() {
-      var today = new Date();
-      var year = today.getYear();
-      var month = today.getMonth();
-
-      return new Date(year, month, 0).getDate();
+    getDateRange() {
+      console.log(this.startDate.isBefore(this.endDate))
+      while(this.startDate.isSameOrBefore(this.endDate)) {
+  
+        this.dateArray.push(this.startDate.format("MM/DD"))
+        this.startDate.add(1, 'days')
+      }
     },
     turnChecked() {
       this.checked = !this.checked;

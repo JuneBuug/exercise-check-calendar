@@ -22,7 +22,7 @@
     <div class="navbar-start">
       <router-link  class="navbar-item" to="/">Home</router-link> 
 
-      <router-link  class="navbar-item" v-for="member in members" :to="member">{{member}}✨</router-link>
+      <router-link  class="navbar-item" v-for="member in members" :to="member" :class="{'is-active': $route}">{{member}}</router-link>
     
     </div>
 
