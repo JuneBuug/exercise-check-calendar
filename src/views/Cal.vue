@@ -2,6 +2,15 @@
   <div class="about">
     {{ $route.params.nickname }}
     <!-- 요일 컴포넌트 시작 -->
+
+    <input type=number v-model="kcal"></input>
+
+                  <button
+                    class="button is-success is-outlined is-rounded full-width has-text-weight-semibold"
+                    @click="updateRecord()"
+                  >업데이트</button>
+
+    {{ record.data }}
     <div class="columns is-multiline" stlye="margin-left: 2%; margin-right:2%;">
       <div class="column" v-for="j in 7">
         <div class="box no-shadow">
@@ -30,18 +39,20 @@
                   <span>DAY {{(i-1)* 7 + j}}</span>
                   <br />
 
-                  
+              
+                  <Dot v-if="record.data.numberOfDots" v-for="num in numberOfDots"></Dot>
 
                   <button
-                    v-if="(i-1)* 7 + j == today || (i-1) * 7 + j + 1 == today "
+                    v-if="(i-1)* 7 + j == today"
                     class="button is-success is-outlined is-rounded full-width has-text-weight-semibold"
                     @click="turnChecked()"
                   >
+
                     <span v-if="!checked">인증🔥</span>
-                    <span v-if="checked">인증완료</span>
+                    <span v-if="checked">추가인증</span>
                   </button>
                 
-                  <Dot  v-else-if="(i-1)* 7 + j > today" color="#6783FC" @click="showModal()"></Dot>
+                  <Dot v-else-if="(i-1)* 7 + j > today" color="#6783FC" @click="showModal()"></Dot>
                   <Dot v-else color=#86E3CE></Dot>
                 </p>
               </div>
@@ -80,7 +91,8 @@ export default {
       kcal: 0,
       elapsedTimeInSec: 0,
       weekdaysShort: ["일", "월", "화", "수", "목", "금", "토"],
-      colorPalette: ["#6783FC", "#86E3CE", "#D0E6A5","#FFDD94", "#FA897B", "#CCABD8" ]
+      colorPalette: ["#6783FC", "#86E3CE", "#D0E6A5","#FFDD94", "#FA897B", "#CCABD8" ],
+      record: {}
     };
   },
   props: { nickname: String },
@@ -103,6 +115,8 @@ export default {
     var m = moment();
 
     console.log(m.format("YYYY-MM-DD HH:mm:ss ddd"));
+
+    this.getRecordByName()
   },
   methods: {
     getDaysInThisMonth() {
@@ -128,12 +142,35 @@ export default {
           name: this.nickname,
           completed: this.checked,
           date: moment(new Date()).format("YYYY-MM-DD"),
-          cal: this.kcal,
+          kcal: this.kcal,
+          numberOfDots: this.kcal / 50,
           elapsedTimeInSec: this.elapsedTimeInSec
         })
         .then(res => {
+          this.showModal();
           console.log(res);
         });
+    },
+    updateRecord() {
+      this.$http
+      .post("/.netlify/functions/records-update", {
+          name: this.nickname,
+          completed: this.checked,
+          date: moment(new Date()).format("YYYY-MM-DD"),
+          kcal: this.kcal,
+          numberOfDots: this.kcal / 50,
+          elapsedTimeInSec: this.elapsedTimeInSec
+      })
+      .then (res => {
+        console.log(res);
+      })
+    },
+    getRecordByName() {
+      this.$http.get("/.netlify/functions/records-read-by-name")
+      .then (res => {
+        this.record = res.data
+        console.log(res)
+      })
     }
   }
 };

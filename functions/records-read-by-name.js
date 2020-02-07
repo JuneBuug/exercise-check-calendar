@@ -10,16 +10,16 @@ const client = new faunadb.Client({
 /* export our lambda function as named "handler" export */
 exports.handler = (event, context, callback) => {
     /* parse the string body into a useable JS object */
-    const data = JSON.parse(event.body)
-    console.log("Function `users-login` invoked", data)
-    const user = {
-        credentials: { password: data.password },
-        data: { email: data.email }
-    }
+    const nickname = "talonF"
+    // const data = JSON.parse(event.body)
+    console.log("Function `records-read-by-name` invoked", nickname)
+    // const record = {
+    //     data: data
+    // }
     /* construct the fauna query */
-    return client.query(q.Login(q.Match(q.Index("users_by_email"), user.data.email), {password: user.credentials.password}))
+    return client.query(q.Get((q.Match(q.Ref('indexes/records_by_name'), nickname))))
         .then((response) => {
-            console.log("Login success", response)
+            console.log("success", response)
             /* Success! return the response with statusCode 200 */
             return callback(null, {
                 statusCode: 200,
