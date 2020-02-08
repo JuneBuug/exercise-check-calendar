@@ -9,7 +9,7 @@
       class="button is-success is-outlined is-rounded full-width has-text-weight-semibold"
       @click="updateRecord()"
     >업데이트</button>
-    {{ record.data }}
+    //{{ record.data }}
 
     <Weekdays></Weekdays>
    
@@ -25,9 +25,7 @@
                   <span class="has-text-weight-light">{{dateArray[(i-1)* 7 + j - 1 ]}}</span>
                   <br />
 
-                  <!--               
-                  <Dot v-if="!!record.data.numberOfDots" v-for="num in numberOfDots"></Dot>-->
-
+                
                   <button
                     v-if="dateArray[(i-1)* 7 + j - 1 ] == today"
                     class="button is-success is-outlined is-rounded full-width has-text-weight-semibold"
@@ -38,10 +36,10 @@
                   </button>
 
                   <Dot
-                    v-else-if="dateArray[(i-1)* 7 + j - 1 ] > today"
+                    v-else-if="dateArray[(i-1)* 7 + j - 1 ] == record.data.date"
                     color="#6783FC"
                   ></Dot>
-                  <Dot v-else color="#86E3CE"></Dot>
+                  <!-- <Dot v-else color="#86E3CE"></Dot> -->
                 </p>
               </div>
             </div>
@@ -50,7 +48,7 @@
       </div>
     </div>
 
-    <Modal ref="success" showModalFlag=false></Modal>
+    <Modal ref="success"></Modal>
 
   </div>
 </template>
@@ -63,10 +61,14 @@ import Hero from "../components/Hero"
 import Weekdays from "../components/Weekdays"
 import Modal from "../components/Modal"
 
-
 export default {
   name: "Cal",
-  components: { Dot, Hero, Weekdays },
+  props: { 
+    username : {
+      type: String
+    }
+  },
+  components: { Dot, Hero, Weekdays, Modal },
   data() {
     return {
       columns: 35,
@@ -86,7 +88,8 @@ export default {
         "#FA897B",
         "#CCABD8"
       ],
-      record: {}
+      record: {},
+      //username: $this.$props.username
     };
   },
   props: { nickname: String },
@@ -110,13 +113,13 @@ export default {
     this.endDate = moment("2020-01-27").add(34, "days");
     this.getDateRange();
 
-    // this.getRecordByName()
+    this.getRecordByName()
   },
   methods: {
     getDateRange() {
       console.log(this.startDate.isBefore(this.endDate));
       while (this.startDate.isSameOrBefore(this.endDate)) {
-        this.dateArray.push(this.startDate.format("MM/DD"));
+        this.dateArray.push(this.startDate.format("YYYY-MM-DD"));
         this.startDate.add(1, "days");
       }
     },
@@ -154,7 +157,9 @@ export default {
         });
     },
     getRecordByName() {
-      this.$http.get("/.netlify/functions/records-read-by-name").then(res => {
+      const username = this.$route.params.nickname
+    
+      this.$http.post("/.netlify/functions/records-read-by-name", {name : username}).then(res => {
         this.record = res.data;
         console.log(res);
       });

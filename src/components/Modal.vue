@@ -15,7 +15,8 @@ export default {
   name: "Modal",
   props: {
     showModalFlag: {
-      type: Boolean
+      type: Boolean,
+      default: false
     },
     comment: {
       type: String
