@@ -24,16 +24,11 @@ export default {
     },
     data() {
       return {
-        members: ['juneyr', 'hypetrain','talonF'],
-        activeFlag: false, 
       }
     },
     created() {
     },
     methods: {
-      activateHamburger() {
-        this.activeFlag = !this.activeFlag
-      }
     }
 }
 </script>

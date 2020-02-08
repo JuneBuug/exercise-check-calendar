@@ -39,7 +39,6 @@ function createFaunaDB(key) {
                     name: 'records_by_name',
                     source: q.Ref('classes/records'),
                     terms: [{field: ["data", "name"]}],
-                    unique: true
                 }))
         }).catch((e) => {
             // Database already exists
