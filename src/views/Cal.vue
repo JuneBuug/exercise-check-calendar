@@ -9,8 +9,7 @@
       class="button is-success is-outlined is-rounded full-width has-text-weight-semibold"
       @click="updateRecord()"
     >업데이트</button>
-    //{{ record.data }}
-
+    
     <Weekdays></Weekdays>
    
     <div class="columns is-multiline" stlye="margin-left: 2%; margin-right:2%;" v-for="i in 5">
@@ -26,6 +25,13 @@
                   <br />
 
                 
+                 <Dot
+                    v-for="re in record"
+                    v-if="dateArray[(i-1)* 7 + j - 1 ] == re.data.date"
+                    color="#6783FC"
+                  ></Dot>
+                 
+
                   <button
                     v-if="dateArray[(i-1)* 7 + j - 1 ] == today"
                     class="button is-success is-outlined is-rounded full-width has-text-weight-semibold"
@@ -35,11 +41,7 @@
                     <span v-if="checked">추가인증</span>
                   </button>
 
-                  <Dot
-                    v-else-if="dateArray[(i-1)* 7 + j - 1 ] == record.data.date"
-                    color="#6783FC"
-                  ></Dot>
-                  <!-- <Dot v-else color="#86E3CE"></Dot> -->
+
                 </p>
               </div>
             </div>
@@ -72,7 +74,7 @@ export default {
   data() {
     return {
       columns: 35,
-      today: moment().format("MM/DD"),
+      today: moment().format("YYYY-MM-DD"),
       checked: false,
       kcal: 0,
       startDate: {},
@@ -88,7 +90,7 @@ export default {
         "#FA897B",
         "#CCABD8"
       ],
-      record: {},
+      record: [],
       //username: $this.$props.username
     };
   },
@@ -115,6 +117,11 @@ export default {
 
     this.getRecordByName()
   },
+  watch: {
+    '$route' (to, from) {
+       this.getRecordByName()
+    }
+  },
   methods: {
     getDateRange() {
       console.log(this.startDate.isBefore(this.endDate));
@@ -134,7 +141,7 @@ export default {
           completed: this.checked,
           date: moment(new Date()).format("YYYY-MM-DD"),
           kcal: this.kcal,
-          numberOfDots: this.kcal / 50,
+          numberOfDots: this.kcal / 25,
           elapsedTimeInSec: this.elapsedTimeInSec
         })
         .then(res => {
@@ -149,7 +156,7 @@ export default {
           completed: this.checked,
           date: moment(new Date()).format("YYYY-MM-DD"),
           kcal: this.kcal,
-          numberOfDots: this.kcal / 50,
+          numberOfDots: this.kcal / 25,
           elapsedTimeInSec: this.elapsedTimeInSec
         })
         .then(res => {
@@ -160,8 +167,8 @@ export default {
       const username = this.$route.params.nickname
     
       this.$http.post("/.netlify/functions/records-read-by-name", {name : username}).then(res => {
-        this.record = res.data;
-        console.log(res);
+        this.record = res.data
+        console.log(res.data);
       });
     }
   }
