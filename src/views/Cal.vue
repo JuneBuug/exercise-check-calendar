@@ -222,10 +222,8 @@ export default {
     fives(){
       var numbers = []
 
-      for (var i=0; i<= 150; i ++ ){
-        if(i % 5 == 0) {
+      for (var i=1; i<= 150; i ++ ){
           numbers.push(i)
-        }
       }
       return numbers
     }
