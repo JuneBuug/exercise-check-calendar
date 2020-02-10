@@ -18,6 +18,11 @@
                   <span class="has-text-weight-light">{{dateArray[(i-1)* 7 + j - 1 ]}}</span>
                   <br />
 
+                  <h2
+                    class="has-text-centered"
+                    v-for="re in record"
+                    v-if="dateArray[(i-1)* 7 + j - 1 ] == re.data.date"
+                    > {{ re.data.kcal }} kcal </h2>
                   <DotGroup
                     v-for="re in record"
                     v-if="dateArray[(i-1)* 7 + j - 1 ] == re.data.date"
