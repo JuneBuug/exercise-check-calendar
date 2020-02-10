@@ -4,10 +4,9 @@
 
     <!-- <input type="number" class="input" v-model="kcal" /> -->
 
-
     <Weekdays v-if="!isMobile()"></Weekdays>
 
-    <div class="columns is-multiline" stlye="margin-left: 2%; margin-right:2%;" v-for="i in 5">
+    <div class="columns is-multiline" style="margin-left: 2%; margin-right:2%;" v-for="i in 5">
       <div class="column" v-for="j in 7">
         <div class="box light-shadow">
           <article class="media">
@@ -19,21 +18,18 @@
                   <span class="has-text-weight-light">{{dateArray[(i-1)* 7 + j - 1 ]}}</span>
                   <br />
 
-                  <Dot
+                  <DotGroup
                     v-for="re in record"
                     v-if="dateArray[(i-1)* 7 + j - 1 ] == re.data.date"
-                    color="#6783FC"
-                  ></Dot>
-
-                  <!-- <Dot v-else color="#FA897B"></Dot> -->
+                    v-bind:num="re.data.numberOfDots"
+                  ></DotGroup>
 
                   <button
-                    v-if="dateArray[(i-1)* 7 + j - 1 ] == today"
+                    v-if="dateArray[(i-1)* 7 + j - 1 ] == today && !checked"
                     class="button is-success is-outlined is-rounded full-width has-text-weight-semibold"
-                    @click="turnChecked()"
+                    @click="showModal()"
                   >
-                    <span v-if="!checked">인증🔥</span>
-                    <span v-if="checked">추가인증</span>
+                    <span>인증🔥</span>
                   </button>
                 </p>
               </div>
@@ -44,6 +40,34 @@
     </div>
 
     <Modal ref="success"></Modal>
+
+    <div class="modal" :class="{'is-active': showModalFlag}">
+      <div class="modal-background" @click="hideModal()"></div>
+      <div class="modal-card">
+        <section class="modal-card-body">
+
+          <div class="field">
+            <div class="control">
+              <div class="select is-primary is-fullwidth">
+                <select v-model="kcal">
+                  <option disabled>소모한 칼로리 선택</option>
+                  <option v-for="n in fives()">{{n}}</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          
+          <br />
+        
+          <button
+            class="button is-success is-outlined is-rounded full-width"
+            @click="turnChecked()"
+          >
+            <span>인증🔥</span>
+          </button>
+        </section>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -54,6 +78,7 @@ import Dot from "../components/Dot";
 import Hero from "../components/Hero";
 import Weekdays from "../components/Weekdays";
 import Modal from "../components/Modal";
+import DotGroup from "../components/DotGroup";
 
 export default {
   name: "Cal",
@@ -62,17 +87,18 @@ export default {
       type: String
     }
   },
-  components: { Dot, Hero, Weekdays, Modal },
+  components: { Dot, Hero, Weekdays, DotGroup, Modal },
   data() {
     return {
       columns: 35,
       today: moment().format("YYYY-MM-DD"),
       checked: false,
       kcal: 0,
+      elapsedTimeInSec: 0,
+      showModalFlag: false,
       startDate: {},
       endDate: {},
       dateArray: [],
-      elapsedTimeInSec: 0,
       weekdaysShort: ["일", "월", "화", "수", "목", "금", "토"],
       colorPalette: [
         "#6783FC",
@@ -129,14 +155,15 @@ export default {
       this.$http
         .post("/.netlify/functions/records-create", {
           name: this.nickname,
-          completed: this.checked,
           date: moment(new Date()).format("YYYY-MM-DD"),
           kcal: this.kcal,
-          numberOfDots: this.kcal / 25,
+          numberOfDots: Math.floor(this.kcal / 25),
           elapsedTimeInSec: this.elapsedTimeInSec
         })
         .then(res => {
-          vm.$refs.success.showModal();
+           // vm.$refs.success.showModal();
+          this.hideModal();
+          this.getRecordByName();
           console.log(res);
         });
     },
@@ -144,10 +171,9 @@ export default {
       this.$http
         .post("/.netlify/functions/records-update", {
           name: this.nickname,
-          completed: this.checked,
           date: moment(new Date()).format("YYYY-MM-DD"),
           kcal: this.kcal,
-          numberOfDots: this.kcal / 25,
+          numberOfDots: Math.floor(this.kcal / 25),
           elapsedTimeInSec: this.elapsedTimeInSec
         })
         .then(res => {
@@ -161,6 +187,13 @@ export default {
         .post("/.netlify/functions/records-read-by-name", { name: username })
         .then(res => {
           this.record = res.data;
+
+          for (var index in this.record) {
+            if (this.record[index].data.date === this.today) {
+              this.checked = true;
+            }
+          }
+
           console.log(res.data);
         });
     },
@@ -174,6 +207,22 @@ export default {
       } else {
         return false;
       }
+    },
+    showModal() {
+      this.showModalFlag = true;
+    },
+    hideModal() {
+      this.showModalFlag = false;
+    },
+    fives(){
+      var numbers = []
+
+      for (var i=0; i<= 150; i ++ ){
+        if(i % 5 == 0) {
+          numbers.push(i)
+        }
+      }
+      return numbers
     }
   }
 };
@@ -190,5 +239,9 @@ export default {
     5px 5px 5px 5px rgba(216, 215, 215, 0.05);
   -webkit-box-shadow: 0 5px 14px rgba(10, 10, 10, 0.05),
     5px 5px 5px 5px rgba(216, 215, 215, 0.05);
+}
+
+.mb-2 {
+  margin-bottom: 2%;
 }
 </style>
