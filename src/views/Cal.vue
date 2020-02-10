@@ -1,17 +1,12 @@
 <template>
   <div class="about">
-
     <Hero desc="근육은 단련받은 은혜를 잊지않습니다."></Hero>
 
-    <input type="number" class="input" v-model="kcal" />
+    <!-- <input type="number" class="input" v-model="kcal" /> -->
 
-    <button
-      class="button is-success is-outlined is-rounded full-width has-text-weight-semibold"
-      @click="updateRecord()"
-    >업데이트</button>
-    
-    <Weekdays></Weekdays>
-   
+
+    <Weekdays v-if="!isMobile()"></Weekdays>
+
     <div class="columns is-multiline" stlye="margin-left: 2%; margin-right:2%;" v-for="i in 5">
       <div class="column" v-for="j in 7">
         <div class="box light-shadow">
@@ -24,13 +19,13 @@
                   <span class="has-text-weight-light">{{dateArray[(i-1)* 7 + j - 1 ]}}</span>
                   <br />
 
-                
-                 <Dot
+                  <Dot
                     v-for="re in record"
                     v-if="dateArray[(i-1)* 7 + j - 1 ] == re.data.date"
                     color="#6783FC"
                   ></Dot>
-                 
+
+                  <!-- <Dot v-else color="#FA897B"></Dot> -->
 
                   <button
                     v-if="dateArray[(i-1)* 7 + j - 1 ] == today"
@@ -40,8 +35,6 @@
                     <span v-if="!checked">인증🔥</span>
                     <span v-if="checked">추가인증</span>
                   </button>
-
-
                 </p>
               </div>
             </div>
@@ -51,7 +44,6 @@
     </div>
 
     <Modal ref="success"></Modal>
-
   </div>
 </template>
 
@@ -59,14 +51,14 @@
 <script>
 import moment from "moment-timezone";
 import Dot from "../components/Dot";
-import Hero from "../components/Hero"
-import Weekdays from "../components/Weekdays"
-import Modal from "../components/Modal"
+import Hero from "../components/Hero";
+import Weekdays from "../components/Weekdays";
+import Modal from "../components/Modal";
 
 export default {
   name: "Cal",
-  props: { 
-    username : {
+  props: {
+    username: {
       type: String
     }
   },
@@ -90,8 +82,7 @@ export default {
         "#FA897B",
         "#CCABD8"
       ],
-      record: [],
-      //username: $this.$props.username
+      record: []
     };
   },
   props: { nickname: String },
@@ -115,11 +106,11 @@ export default {
     this.endDate = moment("2020-01-27").add(34, "days");
     this.getDateRange();
 
-    this.getRecordByName()
+    this.getRecordByName();
   },
   watch: {
-    '$route' (to, from) {
-       this.getRecordByName()
+    $route(to, from) {
+      this.getRecordByName();
     }
   },
   methods: {
@@ -164,12 +155,25 @@ export default {
         });
     },
     getRecordByName() {
-      const username = this.$route.params.nickname
-    
-      this.$http.post("/.netlify/functions/records-read-by-name", {name : username}).then(res => {
-        this.record = res.data
-        console.log(res.data);
-      });
+      const username = this.$route.params.nickname;
+
+      this.$http
+        .post("/.netlify/functions/records-read-by-name", { name: username })
+        .then(res => {
+          this.record = res.data;
+          console.log(res.data);
+        });
+    },
+    isMobile() {
+      if (
+        /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+          navigator.userAgent
+        )
+      ) {
+        return true;
+      } else {
+        return false;
+      }
     }
   }
 };
