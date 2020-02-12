@@ -1,5 +1,10 @@
 # ring-fit
 
+## 프로젝트 화면 
+
+![화면](./scrn.png)
+
+
 ## Project setup
 ```
 npm install
