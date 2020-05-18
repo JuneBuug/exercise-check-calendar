@@ -134,8 +134,8 @@ export default {
     var m = moment();
 
 
-    this.startDate = moment("2020-04-27");
-    this.endDate = moment("2020-04-27").add(48, "days");
+    this.startDate = moment("2020-05-18");
+    this.endDate = moment("2020-05-18").add(48, "days");
     this.getDateRange();
 
     this.getRecordByName();
