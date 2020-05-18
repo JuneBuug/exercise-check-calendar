@@ -39,7 +39,7 @@ export default {
     name: 'Nav',
     data() {
       return {
-        members: ['juneyr', 'hypetrain','talonF', 'mj'],
+        members: ['juneyr', 'hypetrain','talonF', 'gomip', 'mj'],
         activeFlag: false, 
       }
     },
